@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { validationResult } = require('express-validator');
 
-// New comment
 // Register a new user
 const registerUser = async (req, res) => {
   try {
@@ -54,7 +53,7 @@ const loginUser = async(req,res)=>{
   //check if the email exists in the db
   const existingUser = await User.findOne({ email });
   if(!existingUser){
-    return res.status(401).json({ message: 'Invalid credentials' }); //restatus
+    return res.status(401).json({ message: 'Invalid credentials' }); 
   }
 
   // check if the hashed password is the same as the one in the db
@@ -130,7 +129,7 @@ const getCurrentUser = async (req, res) => {
     // Verify and decode the token
     token = token.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userId);
+    const user = await User.findOne({email:decoded.data});
     res.status(200).json({ user });
   } catch (error) {
     console.error(error);
