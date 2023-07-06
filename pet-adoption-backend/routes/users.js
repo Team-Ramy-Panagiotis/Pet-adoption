@@ -18,6 +18,9 @@ router.get('/users/:id', AuthController.getUserById);
 // Update user by ID
 router.put('/users/:id', AuthController.updateUser);
 
+// Delete user by ID
+router.delete('/users/:id', AuthController.deleteUserById);
+
 module.exports = router;
 
 

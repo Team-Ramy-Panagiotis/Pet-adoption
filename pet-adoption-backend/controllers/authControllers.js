@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { validationResult } = require('express-validator');
 
-
 // Register a new user
 const registerUser = async (req, res) => {
   try {
@@ -54,7 +53,7 @@ const loginUser = async(req,res)=>{
   //check if the email exists in the db
   const existingUser = await User.findOne({ email });
   if(!existingUser){
-    return res.status(401).json({ message: 'Invalid credentials' }); //restatus
+    return res.status(401).json({ message: 'Invalid credentials' }); 
   }
 
   // check if the hashed password is the same as the one in the db
@@ -130,12 +129,30 @@ const getCurrentUser = async (req, res) => {
     // Verify and decode the token
     token = token.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decoded)
+
     const user = await User.findOne({email:decoded.data});
     res.status(200).json({ user });
   } catch (error) {
     console.error(error);
     res.status(401).json({ message: 'Token is not valid' });
+  }
+};
+
+// Delete user by ID
+const deleteUserById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Find the user by ID and delete
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser){
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({ message : 'User deleted succesfully'});
+  } catch (error){
+    console.log(error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -145,4 +162,5 @@ module.exports = {
   loginUser,
   updateUser,
   getCurrentUser,
+  deleteUserById
 };
