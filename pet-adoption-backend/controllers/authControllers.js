@@ -108,7 +108,7 @@ const getCurrentUser = async (req, res) => {
 
   try {
     // Verify and decode the token
-    token = token.split('')[1];
+    token = token.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId);
     res.status(200).json({ user });
